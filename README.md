@@ -53,7 +53,7 @@ This document assumes that you are familiar with Python and Django.
 
         TEMPLATE_DIRS = (
             ...
-            'path/to/persistent_messages/templates')
+            'path/to/persistent_messages/templates'
         )
 
 
