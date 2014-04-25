@@ -6,6 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.db.models import Q
 import datetime
+import itertools
 
 def get_user(request):
     if hasattr(request, 'user') and request.user.__class__ != AnonymousUser:
@@ -76,6 +77,12 @@ class PersistentMessageStorage(FallbackStorage):
         if self._queued_messages:
             messages.extend(self._queued_messages)
         return iter(messages)
+
+    def __getitem__(self, index):
+        try:
+            return next(itertools.islice(self.__iter__(), index, index + 1))
+        except TypeError:
+            return list(itertools.islice(self.__iter__(), index.start, index.stop, index.step))
 
     def _prepare_messages(self, messages):
         if not get_user(self.request).is_authenticated():
