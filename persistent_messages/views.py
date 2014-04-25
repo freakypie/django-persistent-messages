@@ -23,7 +23,8 @@ def message_mark_read(request, message_id):
     message.read = True
     message.save()
     if not request.is_ajax():
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER') or '/')
+        return HttpResponseRedirect(
+            request.REQUEST.get("next", request.META.get('HTTP_REFERER')) or '/')
     else:
         return HttpResponse('')
 
@@ -33,6 +34,7 @@ def message_mark_all_read(request):
         raise PermissionDenied
     Message.objects.filter(user=user).update(read=True)
     if not request.is_ajax():
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER') or '/')
+        return HttpResponseRedirect(
+            request.REQUEST.get("next", request.META.get('HTTP_REFERER')) or '/')
     else:
         return HttpResponse('')
